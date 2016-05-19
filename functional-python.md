@@ -302,7 +302,7 @@ records = map(partial(dict_from_keys_vals, keys), matrix)
 
 —
 
-# PySpark
+# Example: PySpark
 
 ```bash
 docker run --rm -v ${PWD}:/home/jovyan/work -p 8888:8888 jupyter/pyspark-notebook
@@ -324,6 +324,81 @@ http://spark.apache.org/docs/latest/programming-guide.html#transformations
 
 —
 
+# Example: K-Means
+#### (Stolen and modified from Joel Grus)
+
+```python
+def kmeans(points, k):
+	return until_convergence(
+		iterate(
+			find_new_means(points),
+			random.sample(points, k)))
+```
+
+—
+
+```python
+def until_convergence(it):
+    return last(accumulate(no_repeat, it))
+    
+def no_repeat(prev, curr):
+    if prev == curr: raise StopIteration
+    else: return curr
+```
+
+—
+
+```python
+import random
+from toolz.curried import iterate, accumulate, curry, groupby, last, compose
+
+def kmeans(k, points):
+    return until_convergence(iterate(find_new_means(points), random.sample(points, k)))
+    
+@curry
+def find_new_means(points, old_means):
+    k = len(old_means)
+    clusters = groupby(compose(str, closest_mean(old_means)), points).values()
+    return list(map(cluster_mean, clusters))
+```
+
+—
+
+```python
+@curry
+def closest_mean(means, point):
+    return min(means, key=squared_distance(point))
+
+@curry
+def squared_distance(p, q):
+    return sum((p_i - q_i)**2 for p_i, q_i in zip(p, q))
+```
+
+—
+
+```python
+def cluster_mean(points):
+    num_points = len(points)
+    dim = len(points[0]) if points else 0
+    sum_points = [sum(point[j] for point in points)
+                  for j in range(dim)]
+    return [s / num_points for s in sum_points]
+```
+
+—
+
+# Main takeaways
+
+- FP is possible in Python (to a degree)
+- small composable functions are good
+- FP == build general tools and compose them
+
+^
+Functional programming enables writing small composable functions
+Decide for yourself and with your team if this is a good idea
+
+—
+
 # [fit] Whats missing in Python (or what I am missing)
 
 - More list functions
@@ -332,7 +407,7 @@ http://spark.apache.org/docs/latest/programming-guide.html#transformations
 - ADTs (sum types)[^*]
 - Pattern Matching
 
-[^*]: Possible but ugly http://stupidpythonideas.blogspot.de/2014/08/adts-for-python.html
+[^*]: Possible but ugly [http://stupidpythonideas.blogspot.de/2014/08/adts-for-python.html](http://stupidpythonideas.blogspot.de/2014/08/adts-for-python.html)
 
 —
 
@@ -359,18 +434,6 @@ Might not work as expected in i.e. PySpark
 
 —
 
-# Main takeaways
-
-- FP is possible in Python (to a degree)
-- small composable functions are good
-- FP == build general tools and compose them
-
-^
-Functional programming enables writing small composable functions
-Decide for yourself and with your team if this is a good idea
-
-—
-
 # Other interesting stuff
 
 - Separation of pure code and sideeffects:
@@ -385,11 +448,13 @@ Decide for yourself and with your team if this is a good idea
 
 - [http://kachayev.github.io/talks/uapycon2012/](http://kachayev.github.io/talks/uapycon2012/)
 - [https://vimeo.com/80096814](https://vimeo.com/80096814)
+- [https://github.com/joelgrus/stupid-itertools-tricks-pydata](https://github.com/joelgrus/stupid-itertools-tricks-pydata)
 - [http://kirelabs.org/fun-js](http://kirelabs.org/fun-js)
 
 ^
 Matthew Rocklin PyData NYC 2013 - pytoolz
 ALEXEY KACHAYEV PyCon UA 2012 - fn.py
+Joel Grus: PyData Seattle 2015
 
 —
 
