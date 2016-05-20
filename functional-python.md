@@ -44,6 +44,8 @@ The fate of `reduce()` in Python 3000
 Disagree: language should support me
 Don’t _recommend_ you to use what I’m presenting here
 Show you the entrance to the rabbit hole
+Jupyter Notebook!
+Don’t be afraid to interrupt me!
 
 —
 
@@ -56,6 +58,9 @@ Show you the entrance to the rabbit hole
 - composition
 - partial application & currying
 - recursion
+
+^
+Vocabulary of fuctional concepts
 
 —
 
@@ -440,6 +445,10 @@ Decide for yourself and with your team if this is a good idea
 - http://toolz.readthedocs.io/en/latest/
 - https://github.com/kachayev/fn.py
 - http://pedrorodriguez.io/PyFunctional/
+
+^
+Matthew Rocklin last year’s keynote
+ALEXEY KACHAYEV
 
 —
 
