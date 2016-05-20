@@ -5,7 +5,7 @@
 # About me
 
 Data Scientist @ idalab (mainly Python)
-Used Ruby, JS, Python, Haskell for nontrivial projects
+Used Ruby, JS, Python, Haskell, Swift for nontrivial projects
 Played with Clojure, Scala, Erlang, Elixir
 
 http://kirelabs.org/fun-js
@@ -17,11 +17,6 @@ http://kirelabs.org/fun-js
 - __Not__ a motivation of functional programming
 - __How__ can FP by used in Python
 
-^
-Give you hints
-Don’t _recommend_ you to use what I’m presenting here
-Show you the entrance to the rabbit hole
-
 —
 
 # Disclaimer
@@ -31,6 +26,10 @@ Show you the entrance to the rabbit hole
 > obvious way to do it.
 -- [PEP 20 — The Zen of Python](https://www.python.org/dev/peps/pep-0020/)
 
+^
+Python has a philosophy and many of the things you will see go against this philosopy
+This goes so far that
+
 —
 
 # Disclaimer (cont)
@@ -39,6 +38,12 @@ The fate of `reduce()` in Python 3000
 
 > not having the choice streamlines the thought process
 -- [Guido van Rossum](https://www.artima.com/weblogs/viewpost.jsp?thread=98196)
+
+^
+2005
+Disagree: language should support me
+Don’t _recommend_ you to use what I’m presenting here
+Show you the entrance to the rabbit hole
 
 —
 
@@ -76,6 +81,7 @@ def add(a, b):
 	
 additions_made = 0
 def add(a, b):
+	global additions_made
 	additions_made += 1
 	return a + b
 ```
@@ -158,9 +164,22 @@ Toy example - just building up a toolbox for the fun stuff
 def curried_add(a):
 	def inner(b):
 		return add(a,b)
+	return inner
 		
 add(1)    # => <function …>
 add(1)(1) # => 2
+```
+
+—
+
+# Currying
+
+```python
+from toolz import curry
+add = curry(add)
+
+add(1)    # => <function …>
+add(1, 1) # => 2
 ```
 
 —
@@ -171,6 +190,7 @@ add(1)(1) # => 2
 def curried_add(a):
 	def inner(b):
 		return add(a,b)
+	return inner
 		
 add(1)    # => <function …>
 add(1)(1) # => 2
@@ -231,6 +251,9 @@ for el in seq:
 —
 
 ![](reduce.png)
+
+^
+almost every time I see a reduce() call with a non-trivial function argument, I need to grab pen and paper to diagram what's actually being fed into that function before I understand what the reduce() is supposed to do
 
 —
 
